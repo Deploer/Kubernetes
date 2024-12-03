@@ -9,3 +9,7 @@ kubectl get pod -l app=sa-frontend
 kubectl create -f service-sa-frontend-lb.yaml
 service "sa-frontend-lb" created
 
+
+kubectl apply -f sa-frontend-deployment.yaml
+deployment "sa-frontend" created
+
