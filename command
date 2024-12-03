@@ -5,3 +5,7 @@ pod "sa-frontend2" created
 
 kubectl get pod -l app=sa-frontend
 
+
+kubectl create -f service-sa-frontend-lb.yaml
+service "sa-frontend-lb" created
+
