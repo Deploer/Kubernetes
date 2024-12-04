@@ -7,6 +7,6 @@ kubectl create -f service.yaml
 service "demo-server-lb" created
 
 
-kubectl apply -f deploy.yaml
+kubectl apply -f demo-deploy.yaml
 deployment "demo-server" created
 
