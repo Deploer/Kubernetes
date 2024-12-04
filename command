@@ -1,15 +1,12 @@
-kubectl create -f sa-frontend-pod2.yaml
-pod "sa-frontend2" created
+kubectl create -f manifest.yaml
+# pod "demo-server" created
 
-надо добавить метку
+kubectl get pod -l app=demo-server
 
-kubectl get pod -l app=sa-frontend
-
-
-kubectl create -f service-sa-frontend-lb.yaml
-service "sa-frontend-lb" created
+kubectl create -f service.yaml
+service "demo-server-lb" created
 
 
-kubectl apply -f sa-frontend-deployment.yaml
-deployment "sa-frontend" created
+kubectl apply -f deploy.yaml
+deployment "demo-server" created
 
