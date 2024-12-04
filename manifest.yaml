@@ -1,7 +1,9 @@
 apiVersion: v1
 kind: Pod                                            # 1
 metadata:
-  name: demo-server                                 # 2
+  name: demo-server
+  labels:
+    app: demo-server                                 # 2
 spec:                                                # 3
   containers:
     - image: deploer/demo-server-arm # 4
