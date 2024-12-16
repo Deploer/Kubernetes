@@ -1,3 +1,4 @@
+#!/bin/sh
 kubectl create -f manifest.yaml
 # pod "demo-server" created
 # huinya code
