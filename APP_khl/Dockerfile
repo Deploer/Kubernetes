@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:18-alpine
 
 # Копируем все файлы приложения в директорию Nginx для статических файлов
 COPY . /usr/share/nginx/html/
