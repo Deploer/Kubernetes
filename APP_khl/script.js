@@ -1,4 +1,4 @@
-// Данные матчей (пример)
+// Данные матчей
 const matches = [
   {
     date: '2026-02-20',
@@ -15,31 +15,8 @@ const matches = [
     team2: 'ЦСКА',
     arena: 'СКА Арена, Санкт-Петербург',
     score: '2 : 4'
-  },
-  {
-    date: '2026-02-22',
-    time: '15:00',
-    team1: 'Локомотив',
-    team2: 'Динамо Мн',
-    arena: 'Арена-2000, Ярославль',
-    score: '5 : 1'
-  },
-  {
-    date: '2026-02-23',
-    time: '19:30',
-    team1: 'Салават Юлаев',
-    team2: 'Ак Барс',
-    arena: 'Уфа-Арена, Уфа',
-    score: '1 : 3'
-  },
-  {
-    date: '2026-02-24',
-    time: '18:00',
-    team1: 'Трактор',
-    team2: 'Сибирь',
-    arena: 'Арена Трактор, Челябинск',
-    score: '4 : 2'
   }
+  // Добавьте остальные матчи
 ];
 
 // DOM-элементы
@@ -75,17 +52,28 @@ function filterMatches() {
   const teamQuery = teamFilter.value.toLowerCase();
 
   const filtered = matches.filter(match => {
-    // Фильтрация по дате
     if (selectedDate && match.date !== selectedDate) return false;
-
-    // Фильтрация по команде
     if (teamQuery &&
         !match.team1.toLowerCase().includes(teamQuery) &&
         !match.team2.toLowerCase().includes(teamQuery)) {
       return false;
     }
-
     return true;
   });
 
   renderMatches(filtered);
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+  renderMatches(matches); // Показываем все матчи при загрузке
+  
+  // Обработчики событий
+  dateFilter.addEventListener('change', filterMatches);
+  teamFilter.addEventListener('input', filterMatches);
+  clearFiltersBtn.addEventListener('click', () => {
+    dateFilter.value = '';
+    teamFilter.value = '';
+    renderMatches(matches);
+  });
+});
