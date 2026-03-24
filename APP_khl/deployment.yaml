@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: my-app-container-khl
-        image: deploer/app-khl:latest # Замените на ваш образ из Docker Hub (напр. username/repository:tag)
+        image: deploer/app-khl:v1.0 # Замените на ваш образ из Docker Hub (напр. username/repository:tag)
         ports:
         - containerPort: 8090
