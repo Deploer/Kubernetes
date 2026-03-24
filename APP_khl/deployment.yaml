@@ -5,7 +5,7 @@ metadata:
   labels:
     app: my-app-khl
 spec:
-  replicas: 5 # Количество запущенных контейнеров
+  replicas: 2 # Количество запущенных контейнеров
   selector:
     matchLabels:
       app: my-app-khl
@@ -18,4 +18,4 @@ spec:
       - name: my-app-container-khl
         image: deploer/app-khl:latest # Замените на ваш образ из Docker Hub (напр. username/repository:tag)
         ports:
-        - containerPort: 8080
+        - containerPort: 8090
