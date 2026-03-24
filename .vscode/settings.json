@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://www.schemastore.org/chart.json": "k8smsx://loadkubernetescore/pod-my-app-deployment-khl-746c9585d9-kvxr4.yaml?ns%3Ddefault%26value%3Dpod%2Fmy-app-deployment-khl-746c9585d9-kvxr4%26_%3D1774338803692"
+    }
+}
