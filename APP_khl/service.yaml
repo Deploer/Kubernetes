@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service-khl
+spec:
+  selector:
+    app: my-app-khl
+  ports:
+    - protocol: TCP
+      port: 8080       # Порт сервиса
+      targetPort: 80 # Порт внутри контейнера
+  type: LoadBalancer # Используйте NodePort, если разворачиваете локально (minikube)

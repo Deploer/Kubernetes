@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment-khl
+  labels:
+    app: my-app-khl
+spec:
+  replicas: 3 # Количество запущенных контейнеров
+  selector:
+    matchLabels:
+      app: my-app-khl
+  template:
+    metadata:
+      labels:
+        app: my-app-khl
+    spec:
+      containers:
+      - name: my-app-container-khl
+        image: deploer/app-khl:latest # Замените на ваш образ из Docker Hub (напр. username/repository:tag)
+        ports:
+        - containerPort: 8080
