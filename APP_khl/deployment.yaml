@@ -5,7 +5,7 @@ metadata:
   labels:
     app: my-app-khl
 spec:
-  replicas: 2 # Количество запущенных контейнеров
+  replicas: 0 # Количество запущенных контейнеров
   selector:
     matchLabels:
       app: my-app-khl
