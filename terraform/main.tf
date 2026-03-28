@@ -15,11 +15,11 @@ terraform {
   }
 }
 
-# Пустые блоки провайдеров — они будут использовать ~/.kube/config автоматически
+# Провайдеры без вложенных блоков — они сами возьмут конфиг из ~/.kube/config
 provider "kubernetes" {}
 provider "helm" {}
 
-# 1. Создание Namespace
+# 1. Создаем Namespace
 resource "kubernetes_namespace_v1" "argocd" {
   metadata {
     name = "argocd"
@@ -45,15 +45,16 @@ resource "helm_release" "argocd" {
   }
 }
 
-# 3. Настройка провайдера ArgoCD (через переменные, без вложений)
+# 3. Настройка провайдера ArgoCD
+# ВНИМАНИЕ: Пароль мы введем позже или TF возьмет его из секрета
 provider "argocd" {
   server_addr = "localhost:8080"
   username    = "admin"
-  password    = "заглушка" # Мы обновим это позже или TF сам подхватит из секрета
+  password    = "password-placeholder" 
   insecure    = true
 }
 
-# 4. Приложение
+# 4. Ваше приложение (Guestbook для теста)
 resource "argocd_application" "app-khl" {
   metadata {
     name      = "app-khl-service"
