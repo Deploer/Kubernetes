@@ -60,7 +60,7 @@ securityContext: {}
 
 service:
   type: ClusterIP # Теперь нам не нужен NodePort, Ingress сам найдет сервис внутри
-  port: 80        # Порт сервиса
+  port: 8090        # Порт сервиса
   targetPort: 80  # Порт вашего приложения (из Dockerfile)
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
