@@ -1,9 +1,5 @@
 terraform {
   required_providers {
-    k3d = {
-      source  = "pvrevoort/k3d"
-      version = "0.0.7"
-    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.0.0"
@@ -13,53 +9,38 @@ terraform {
       version = ">= 2.0.0"
     }
     argocd = {
-      source  = "oboukili/argocd"
-      version = "6.1.1"
+      source  = "argoproj-labs/argocd" # Актуальный провайдер
+      version = "7.0.3"
     }
   }
 }
 
-resource "k3d_cluster" "mycluster" {
-  name    = "dev-cluster"
-  servers = 1
-  agents  = 2
-  kube_api {
-    host_port = 6443
-  }
-  port {
-    host_port      = 80
-    container_port = 80
-    node_filters   = ["loadbalancer"]
-  }
-}
-
+# Подключаемся к вашему локальному кластеру k3d
 provider "kubernetes" {
-  host                   = k3d_cluster.mycluster.credentials[0].host
-  client_certificate     = k3d_cluster.mycluster.credentials[0].client_certificate
-  client_key             = k3d_cluster.mycluster.credentials[0].client_key
-  cluster_ca_certificate = k3d_cluster.mycluster.credentials[0].cluster_ca_certificate
+  config_path = "~/.kube/config"
+  config_context = "k3d-dev-cluster"
 }
 
 provider "helm" {
   kubernetes {
-    host                   = k3d_cluster.mycluster.credentials[0].host
-    client_certificate     = k3d_cluster.mycluster.credentials[0].client_certificate
-    client_key             = k3d_cluster.mycluster.credentials[0].client_key
-    cluster_ca_certificate = k3d_cluster.mycluster.credentials[0].cluster_ca_certificate
+    config_path = "~/.kube/config"
+    config_context = "k3d-dev-cluster"
   }
 }
 
+# 1. Namespace для ArgoCD
 resource "kubernetes_namespace" "argocd" {
   metadata { name = "argocd" }
-  depends_on = [k3d_cluster.mycluster]
 }
 
+# 2. Установка ArgoCD
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   namespace  = kubernetes_namespace.argocd.metadata[0].name
   version    = "7.3.11"
+
   set {
     name  = "server.service.type"
     value = "NodePort"
@@ -68,9 +49,9 @@ resource "helm_release" "argocd" {
     name  = "server.extraArgs"
     value = "{--insecure}"
   }
-  depends_on = [kubernetes_namespace.argocd]
 }
 
+# 3. Настройка провайдера ArgoCD (через данные из секрета)
 data "kubernetes_secret" "argocd_admin_pwd" {
   metadata {
     name      = "argocd-initial-admin-secret"
@@ -86,6 +67,7 @@ provider "argocd" {
   insecure    = true
 }
 
+# 4. Ваше приложение
 resource "argocd_application" "app-khl" {
   metadata {
     name      = "app-khl-service"
