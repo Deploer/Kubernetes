@@ -66,7 +66,7 @@ provider "argocd" {
 # 4. Ваше приложение (Guestbook для теста)
 resource "argocd_application" "app-khl" {
   metadata {
-    name      = "app-khl-service"
+    name      = "app-khl"
     namespace = "argocd"
   }
   spec {
