@@ -9,28 +9,31 @@ terraform {
       version = ">= 2.0.0"
     }
     argocd = {
-      source  = "argoproj-labs/argocd" # Актуальный провайдер
+      source  = "argoproj-labs/argocd"
       version = "7.0.3"
     }
   }
 }
 
-# Подключаемся к вашему локальному кластеру k3d
+# Настройка подключения к вашему k3d
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  config_path    = "~/.kube/config"
   config_context = "k3d-dev-cluster"
 }
 
+# Исправленный блок провайдера Helm
 provider "helm" {
   kubernetes {
-    config_path = "~/.kube/config"
+    config_path    = "~/.kube/config"
     config_context = "k3d-dev-cluster"
   }
 }
 
-# 1. Namespace для ArgoCD
-resource "kubernetes_namespace" "argocd" {
-  metadata { name = "argocd" }
+# 1. Используем актуальный ресурс Namespace
+resource "kubernetes_namespace_v1" "argocd" {
+  metadata {
+    name = "argocd"
+  }
 }
 
 # 2. Установка ArgoCD
@@ -38,7 +41,7 @@ resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
-  namespace  = kubernetes_namespace.argocd.metadata[0].name
+  namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
   version    = "7.3.11"
 
   set {
@@ -51,7 +54,7 @@ resource "helm_release" "argocd" {
   }
 }
 
-# 3. Настройка провайдера ArgoCD (через данные из секрета)
+# 3. Достаем пароль
 data "kubernetes_secret" "argocd_admin_pwd" {
   metadata {
     name      = "argocd-initial-admin-secret"
@@ -60,6 +63,7 @@ data "kubernetes_secret" "argocd_admin_pwd" {
   depends_on = [helm_release.argocd]
 }
 
+# Настройка провайдера ArgoCD
 provider "argocd" {
   server_addr = "localhost:8080"
   username    = "admin"
@@ -67,7 +71,7 @@ provider "argocd" {
   insecure    = true
 }
 
-# 4. Ваше приложение
+# 4. Приложение
 resource "argocd_application" "app-khl" {
   metadata {
     name      = "app-khl-service"
