@@ -2,11 +2,11 @@ terraform {
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.0.0"
+      version = "2.27.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.0.0"
+      version = "2.12.1"
     }
     argocd = {
       source  = "argoproj-labs/argocd"
@@ -15,22 +15,11 @@ terraform {
   }
 }
 
-# Настройка подключения к вашему k3d
-# Настройка основного провайдера Kubernetes
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "k3d-dev-cluster"
-}
+# Мы не указываем пути явно, Terraform сам найдет ~/.kube/config
+provider "kubernetes" {}
+provider "helm" {}
 
-# Настройка провайдера Helm (упрощенный синтаксис)
-provider "helm" {
-  kubernetes {
-    config_path    = "~/.kube/config"
-    config_context = "k3d-dev-cluster"
-  }
-}
-
-# Актуальный ресурс для Namespace
+# 1. Namespace
 resource "kubernetes_namespace_v1" "argocd" {
   metadata {
     name = "argocd"
@@ -55,7 +44,7 @@ resource "helm_release" "argocd" {
   }
 }
 
-# 3. Достаем пароль
+# 3. Достаем пароль администратора
 data "kubernetes_secret" "argocd_admin_pwd" {
   metadata {
     name      = "argocd-initial-admin-secret"
@@ -64,7 +53,7 @@ data "kubernetes_secret" "argocd_admin_pwd" {
   depends_on = [helm_release.argocd]
 }
 
-# Настройка провайдера ArgoCD
+# 4. Настройка провайдера ArgoCD
 provider "argocd" {
   server_addr = "localhost:8080"
   username    = "admin"
@@ -72,7 +61,7 @@ provider "argocd" {
   insecure    = true
 }
 
-# 4. Приложение
+# 5. Создание приложения
 resource "argocd_application" "app-khl" {
   metadata {
     name      = "app-khl-service"
