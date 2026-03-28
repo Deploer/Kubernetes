@@ -7,6 +7,6 @@ spec:
     app: my-app-khl
   ports:
     - protocol: TCP
-      port: 8091       # Порт сервиса
+      port: 80       # Порт сервиса
       targetPort: 80 # Порт внутри контейнера
   type: LoadBalancer # Используйте NodePort, если разворачиваете локально (minikube)
