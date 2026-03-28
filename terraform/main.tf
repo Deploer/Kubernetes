@@ -16,12 +16,13 @@ terraform {
 }
 
 # Настройка подключения к вашему k3d
+# Настройка основного провайдера Kubernetes
 provider "kubernetes" {
   config_path    = "~/.kube/config"
   config_context = "k3d-dev-cluster"
 }
 
-# Исправленный блок провайдера Helm
+# Настройка провайдера Helm (упрощенный синтаксис)
 provider "helm" {
   kubernetes {
     config_path    = "~/.kube/config"
@@ -29,7 +30,7 @@ provider "helm" {
   }
 }
 
-# 1. Используем актуальный ресурс Namespace
+# Актуальный ресурс для Namespace
 resource "kubernetes_namespace_v1" "argocd" {
   metadata {
     name = "argocd"
