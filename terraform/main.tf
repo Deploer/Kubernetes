@@ -16,8 +16,17 @@ terraform {
 }
 
 # Провайдеры без вложенных блоков — они сами возьмут конфиг из ~/.kube/config
-provider "kubernetes" {}
-provider "helm" {}
+provider "kubernetes" {
+  config_path    = "~/.kube/config"
+  config_context = "k3d-dev-cluster"
+}
+
+provider "helm" {
+  kubernetes {
+    config_path    = "~/.kube/config"
+    config_context = "k3d-dev-cluster"
+  }
+}
 
 # 1. Создаем Namespace
 resource "kubernetes_namespace_v1" "argocd" {
