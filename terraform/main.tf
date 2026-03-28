@@ -86,17 +86,17 @@ provider "argocd" {
   insecure    = true
 }
 
-resource "argocd_application" "my_app" {
+resource "argocd_application" "app-khl" {
   metadata {
-    name      = "my-web-service"
+    name      = "app-khl-service"
     namespace = "argocd"
   }
   spec {
     project = "default"
     source {
-      repo_url        = "https://github.com/argoproj/argocd-example-apps.git"
-      target_revision = "HEAD"
-      path            = "guestbook"
+      repo_url        = "https://github.com/Deploer/Kubernetes.git"
+      target_revision = "main"
+      path            = "helm-khl"
     }
     destination {
       server    = "https://kubernetes.default.svc"
